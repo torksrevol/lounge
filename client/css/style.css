@@ -1796,6 +1796,17 @@ kbd {
 	font-style: italic;
 }
 
+/** Embeds **/
+.ejs-gist iframe {
+	overflow: auto;
+	max-height: 300px;
+}
+
+.ejs-image img {
+	max-width: 400px;
+	max-height: 400px;
+}
+
 @media (max-width: 768px) {
 	/**
 	  * TODO Replace this with `@media (hover: hover)` when Firefox supports it

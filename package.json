@@ -44,6 +44,7 @@
     "cheerio": "0.22.0",
     "colors": "1.1.2",
     "commander": "2.9.0",
+    "embed-js": "4.2.2",
     "event-stream": "3.3.4",
     "express": "4.15.2",
     "express-handlebars": "3.0.0",

@@ -2,7 +2,6 @@
 
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
-const LinkPrefetch = require("./link");
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -90,10 +89,5 @@ module.exports = function(irc, network) {
 			highlight: highlight
 		});
 		chan.pushMessage(client, msg, !self);
-
-		// No prefetch URLs unless are simple MESSAGE or ACTION types
-		if ([Msg.Type.MESSAGE, Msg.Type.ACTION].indexOf(data.type) !== -1) {
-			LinkPrefetch(client, chan, msg);
-		}
 	}
 };

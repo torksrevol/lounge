@@ -6,6 +6,7 @@ const $ = require("jquery");
 const moment = require("moment");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
+const embed = require("./embed");
 
 // our libraries
 require("./libs/jquery/inputhistory");
@@ -225,6 +226,11 @@ $(function() {
 			template = "msg_unhandled";
 		}
 
+		var link = embed.getLink(data.msg.text);
+		if (link && data.msg.type === "message") {
+			data.msg.url = true;
+		}
+
 		var msg = $(templates[template](data.msg));
 		var text = msg.find(".text");
 
@@ -382,6 +388,10 @@ $(function() {
 				.find(".unread-marker")
 				.appendTo(container);
 		}
+
+		if (options.fetch && data.url) { // if we should automatically expand
+			embed.embed(data.msg.id);
+		}
 	});
 
 	socket.on("more", function(data) {
@@ -488,24 +498,6 @@ $(function() {
 		}
 	});
 
-	socket.on("toggle", function(data) {
-		var toggle = $("#toggle-" + data.id);
-		toggle.parent().after(templates.toggle({toggle: data}));
-		switch (data.type) {
-		case "link":
-			if (options.links) {
-				toggle.click();
-			}
-			break;
-
-		case "image":
-			if (options.thumbnails) {
-				toggle.click();
-			}
-			break;
-		}
-	});
-
 	socket.on("topic", function(data) {
 		var topic = $("#chan-" + data.chan).find(".header .topic");
 		topic.html(helpers_parse(data.topic));
@@ -533,7 +525,6 @@ $(function() {
 		coloredNicks: true,
 		desktopNotifications: false,
 		join: true,
-		links: true,
 		mode: true,
 		motd: true,
 		nick: true,
@@ -542,7 +533,8 @@ $(function() {
 		part: true,
 		quit: true,
 		theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
-		thumbnails: true,
+		expand: true,
+		fetch: true,
 		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
 
@@ -908,6 +900,16 @@ $(function() {
 		}
 	});
 
+	chat.on("click", ".toggle-button", function() {
+		if (!options.fetch || !($(this).parent().parent().hasClass("rendered"))) { // msg.id
+			var id = $(this).parent().parent().attr("id").substring(4); // remove msg-
+			embed.embed(id);
+		}
+
+		$(this).next().toggle();
+		$(this).closest(".chat").scrollBottom();
+	});
+
 	chat.on("click", ".user", function() {
 		var name = $(this).data("name");
 		var chan = findCurrentNetworkChan(name);
@@ -1159,25 +1161,6 @@ $(function() {
 			target: self.data("id"),
 			count: count
 		});
-	});
-
-	chat.on("click", ".toggle-button", function() {
-		var self = $(this);
-		var localChat = self.closest(".chat");
-		var bottom = localChat.isScrollBottom();
-		var content = self.parent().next(".toggle-content");
-		if (bottom && !content.hasClass("show")) {
-			var img = content.find("img");
-			if (img.length !== 0 && !img.width()) {
-				img.on("load", function() {
-					localChat.scrollBottom();
-				});
-			}
-		}
-		content.toggleClass("show");
-		if (bottom) {
-			localChat.scrollBottom();
-		}
 	});
 
 	var forms = $("#sign-in, #connect, #change-password");

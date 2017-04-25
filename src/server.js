@@ -144,7 +144,7 @@ function index(req, res, next) {
 			filename: filename
 		};
 	});
-	res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
+	res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' api.github.com www.googleapis.com ws: wss:; style-src * 'unsafe-inline'; img-src * data:; script-src * 'unsafe-inline'; child-src 'self' *.soundcloud.com www.googleapis.com www.youtube.com www.vimeo.com; object-src 'none'; form-action 'none';");
 	res.setHeader("Referrer-Policy", "no-referrer");
 	res.render("index", data);
 }
