@@ -14,7 +14,7 @@ socket.on("more", function(data) {
 
 	// get the scrollable wrapper around messages
 	const scrollable = chan.closest(".chat");
-	const heightOld = chan.height();
+	const heightOld = chan.height() - scrollable.scrollTop();
 
 	// Remove the date-change marker we put at the top, because it may
 	// not actually be a date change now
