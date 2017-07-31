@@ -33,5 +33,5 @@ function updateText(condensed, addedTypes) {
 			text += obj[messageType] > 1 ? "s" : "";
 		}
 	}
-	condensed.children(".condensed-msg").text(text);
+	condensed.find(".condensed-msg").text(text);
 }
