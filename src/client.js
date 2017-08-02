@@ -583,8 +583,6 @@ Client.prototype.registerPushSubscription = function(session, subscription, noSa
 		});
 	}
 
-	log.debug(`Subscribed ${this.name} to ${subscription.endpoint}`);
-
 	return data;
 };
 
@@ -593,8 +591,6 @@ Client.prototype.unregisterPushSubscription = function(token) {
 	this.manager.updateUser(this.name, {
 		sessions: this.config.sessions
 	});
-
-	log.debug(`Unsubscribed ${this.name}`);
 };
 
 Client.prototype.save = _.debounce(function SaveClient() {
